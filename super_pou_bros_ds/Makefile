@@ -58,6 +58,7 @@ export LIBPATHS := $(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 .PHONY: all clean
 
 all:
+	@[ -d $(BUILD) ] || mkdir -p $(BUILD)
 	$(MAKE) -C $(BUILD) -f $(CURDIR)/Makefile
 
 clean:
