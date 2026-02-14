@@ -11,23 +11,17 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: devkitpro/devkitarm:latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install devkitPro pacman
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget
-          wget https://apt.devkitpro.org/install-devkitpro-pacman
-          chmod +x install-devkitpro-pacman
-          sudo ./install-devkitpro-pacman
-
       - name: Install NDS toolchain
         run: |
-          sudo dkp-pacman -Syu --noconfirm
-          sudo dkp-pacman -S --needed --noconfirm nds-dev
+          dkp-pacman -Syu --noconfirm
+          dkp-pacman -S --needed --noconfirm nds-dev
 
       - name: Build ROM
         env:
