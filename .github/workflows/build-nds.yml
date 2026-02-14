@@ -1,0 +1,44 @@
+name: Build Super Pou Bros DS
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'super_pou_bros_ds/source/**'
+      - 'super_pou_bros_ds/Makefile'
+      - '.github/workflows/build-nds.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install devkitPro pacman
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget
+          wget https://apt.devkitpro.org/install-devkitpro-pacman
+          chmod +x install-devkitpro-pacman
+          sudo ./install-devkitpro-pacman
+
+      - name: Install NDS toolchain
+        run: |
+          sudo dkp-pacman -Syu --noconfirm
+          sudo dkp-pacman -S --needed --noconfirm nds-dev
+
+      - name: Build ROM
+        env:
+          DEVKITPRO: /opt/devkitpro
+          DEVKITARM: /opt/devkitpro/devkitARM
+        run: |
+          make -C super_pou_bros_ds clean
+          make -C super_pou_bros_ds
+
+      - name: Upload ROM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: super_pou_bros_ds
+          path: super_pou_bros_ds/super_pou_bros_ds.nds
