@@ -26,6 +26,9 @@ jobs:
           command -v ndstool || true
           command -v dkp-pacman || true
           ls -la /opt/devkitpro || true
+          if [ ! -f /opt/devkitpro/ds_rules ]; then
+            dkp-pacman -S --noconfirm --needed nds-dev
+          fi
           test -f /opt/devkitpro/ds_rules
 
       - name: Build ROM
