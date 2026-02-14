@@ -1,4 +1,4 @@
-name: Build Super Pou Bros DS
+name: Build Super Pou Bros DS (Docker)
 
 on:
   workflow_dispatch:
