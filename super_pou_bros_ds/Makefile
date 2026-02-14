@@ -4,6 +4,17 @@ ifeq ($(strip $(DEVKITPRO)),)
 $(error Please set DEVKITPRO in your environment. e.g. export DEVKITPRO=/opt/devkitpro)
 endif
 
+DS_RULES := $(DEVKITPRO)/ds_rules
+ifeq ($(wildcard $(DS_RULES)),)
+ifneq ($(strip $(DEVKITARM)),)
+DS_RULES := $(DEVKITARM)/ds_rules
+endif
+endif
+
+ifeq ($(wildcard $(DS_RULES)),)
+$(error Could not find ds_rules. Checked $(DEVKITPRO)/ds_rules and $(DEVKITARM)/ds_rules)
+endif
+
 TARGET := super_pou_bros_ds
 BUILD := build
 SOURCES := source
@@ -63,4 +74,4 @@ $(OUTPUT).elf: $(OFILES)
 
 endif
 
-include $(DEVKITPRO)/ds_rules
+include $(DS_RULES)
