@@ -1,10 +1,12 @@
 # Simple Nintendo DS homebrew build for Super Pou Bros (ARM9 only)
 
-ifeq ($(strip $(DEVKITPRO)),)
-$(error Please set DEVKITPRO in your environment. e.g. export DEVKITPRO=/opt/devkitpro)
+DS_RULES ?=
+ifeq ($(strip $(DS_RULES)),)
+ifneq ($(strip $(DEVKITPRO)),)
+DS_RULES := $(DEVKITPRO)/ds_rules
+endif
 endif
 
-DS_RULES := $(DEVKITPRO)/ds_rules
 ifeq ($(wildcard $(DS_RULES)),)
 ifneq ($(strip $(DEVKITARM)),)
 DS_RULES := $(DEVKITARM)/ds_rules
@@ -12,7 +14,7 @@ endif
 endif
 
 ifeq ($(wildcard $(DS_RULES)),)
-$(error Could not find ds_rules. Checked $(DEVKITPRO)/ds_rules and $(DEVKITARM)/ds_rules)
+$(error Could not find ds_rules. Set DS_RULES, or ensure DEVKITPRO/DEVKITARM are correct)
 endif
 
 TARGET := super_pou_bros_ds
