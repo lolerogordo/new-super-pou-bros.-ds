@@ -18,10 +18,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install NDS toolchain
+      - name: Toolchain diagnostics
         run: |
-          dkp-pacman -Syu --noconfirm
-          dkp-pacman -S --needed --noconfirm nds-dev
+          set -eux
+          echo "PATH=$PATH"
+          command -v arm-none-eabi-gcc || true
+          command -v ndstool || true
+          command -v dkp-pacman || true
+          ls -la /opt/devkitpro || true
+          test -f /opt/devkitpro/ds_rules
 
       - name: Build ROM
         env:
