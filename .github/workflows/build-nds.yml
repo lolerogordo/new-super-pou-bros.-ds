@@ -11,33 +11,25 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: devkitpro/devkitarm:latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Toolchain diagnostics
+      - name: Build with devkitPro Docker image
         run: |
-          set -eux
-          echo "PATH=$PATH"
-          command -v arm-none-eabi-gcc || true
-          command -v ndstool || true
-          command -v dkp-pacman || true
-          ls -la /opt/devkitpro || true
-          if [ ! -f /opt/devkitpro/ds_rules ]; then
-            dkp-pacman -S --noconfirm --needed nds-dev
-          fi
-          test -f /opt/devkitpro/ds_rules
-
-      - name: Build ROM
-        env:
-          DEVKITPRO: /opt/devkitpro
-          DEVKITARM: /opt/devkitpro/devkitARM
-        run: |
-          make -C super_pou_bros_ds clean
-          make -C super_pou_bros_ds
+          docker run --rm \
+            -v "$PWD":/work \
+            -w /work \
+            devkitpro/devkitarm:latest \
+            /bin/bash -lc '
+              set -eux
+              dkp-pacman -S --noconfirm --needed nds-dev
+              export DEVKITPRO=/opt/devkitpro
+              export DEVKITARM=/opt/devkitpro/devkitARM
+              make -C super_pou_bros_ds clean
+              make -C super_pou_bros_ds
+            '
 
       - name: Upload ROM artifact
         uses: actions/upload-artifact@v4
