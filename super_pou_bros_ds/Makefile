@@ -29,7 +29,7 @@ ASFLAGS := -g $(ARCH)
 LDFLAGS := -specs=ds_arm9.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
 LIBS := -lnds9
-LIBDIRS :=
+LIBDIRS := $(DEVKITPRO)/libnds
 
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 
